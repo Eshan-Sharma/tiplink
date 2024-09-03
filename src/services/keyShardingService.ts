@@ -6,14 +6,16 @@ interface SecretShares {
     platformShare2String: string;
 }
 
-async function splitSecret(secretKey: Uint8Array): Promise<SecretShares>  {
+async function splitSecret(secretKey: Uint8Array, numShares:number, threshold:number): Promise<SecretShares>  {
     if (!secretKey) {
         throw new Error('Secret is undefined');
     }
     
     try {
         // Split the secret into 3 parts with a threshold of 3
-        const shares = await shamirSplit(secretKey, 3, 3);
+        numShares = 3 || numShares;
+        threshold = 3 || threshold;
+        const shares = await shamirSplit(secretKey, numShares, threshold);
 
         const [usershare, platformShare1, platformShare2] = shares;
 
